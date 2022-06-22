@@ -27,16 +27,16 @@ LOAD DATA LOCAL INPATH 'data0.csv' INTO TABLE tbl0;
 
 CREATE TABLE Cnt_08 AS
 SELECT
-    c2, pt1, pt2
+    c2, key, value
 FROM
     tbl0
 LATERAL VIEW
-    EXPLODE (c6) List;
+    EXPLODE(c6) List;
 
 INSERT OVERWRITE LOCAL DIRECTORY './output'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 SELECT
-    c2, SUM(pt2)
+    c2, SUM(value)
 FROM
     Cnt_08
 GROUP BY c2;
