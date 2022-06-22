@@ -14,8 +14,8 @@ Escriba el resultado a la carpeta `output` de directorio de trabajo.
 */
 
 CREATE TABLE Data_02(
-    dt1 STRING
-    dt2 DATE
+    dt1 STRING,
+    dt2 DATE,
     dt3 INT)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 TBLPROPERTIES ('skip.header.line.count'='0');
