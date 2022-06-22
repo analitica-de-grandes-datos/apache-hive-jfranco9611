@@ -13,8 +13,8 @@ columna 3 es:
 Apache Hive se ejecutará en modo local (sin HDFS).
 
 Escriba el resultado a la carpeta `output` de directorio de trabajo.
-
 */
+
 
 CREATE TABLE t0 (
     c1 STRING,
@@ -30,8 +30,8 @@ SELECT
     pt1, key, value
 FROM
     (SELECT pt1, c3
-    FROM t0
-    LATERAL VIEW EXPLODE(c2) t0 AS pt1) Rsm_2
+     FROM t0
+     LATERAL VIEW EXPLODE(c2) t0 AS pt1) Rsm_2
 LATERAL VIEW EXPLODE(c3) Rsm_2;
 
 INSERT OVERWRITE LOCAL DIRECTORY './output'
