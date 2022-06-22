@@ -3,8 +3,8 @@
 Pregunta
 ===========================================================================
 
-Escriba una consulta que retorne para cada valor único de la columna `t0.c2`, 
-los valores correspondientes de la columna `t0.c1`. 
+Escriba una consulta que retorne la columna `tbl0.c1` y el valor 
+correspondiente de la columna `tbl1.c4` para la columna `tbl0.c2`.
 
 Apache Hive se ejecutará en modo local (sin HDFS).
 
@@ -24,16 +24,35 @@ COLLECTION ITEMS TERMINATED BY ':'
 MAP KEYS TERMINATED BY '#' LINES TERMINATED BY '\n';
 LOAD DATA LOCAL INPATH 'data0.csv' INTO TABLE tbl0;
 
-CREATE TABLE Cnt_07 AS
+CREATE TABLE tbl1 (
+    c1 INT,
+    c2 INT,
+    c3 STRING,
+    c4 MAP<STRING, INT>)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+COLLECTION ITEMS TERMINATED BY ':'
+MAP KEYS TERMINATED BY '#' LINES TERMINATED BY '\n';
+LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
+
+CREATE TABLE Data_090 AS
 SELECT
-    c2, c1
-FROM tbl0;
+    c1, c2 key
+FROM
+    tbl0;
+
+CREATE TABLE Data_091 AS
+SELECT
+    c1, key, value
+FROM
+    tbl1
+LATERAL VIEW
+    EXPLODE(c4) List;
 
 INSERT OVERWRITE LOCAL DIRECTORY './output'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-COLLECTION ITEMS TERMINATED BY ':'
 SELECT
-    c2, collect_set(c1)
+    Dt1.*
 FROM
-    Cnt_07
-GROUP BY c2;
+    Data_090 Dt0, Data_091 Dt1
+WHERE
+    Dt0.c1 = Dt1.c1 AND Dt0.key = Dt1.key;
